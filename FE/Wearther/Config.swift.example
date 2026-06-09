@@ -1,0 +1,5 @@
+import Foundation
+
+enum Config {
+    static let weatherAPIKey = "YOUR_OPENWEATHERMAP_API_KEY"
+}
