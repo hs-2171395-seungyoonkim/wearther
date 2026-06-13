@@ -9,17 +9,36 @@ enum AppColor {
 }
 
 struct ContentView: View {
-    var body: some View {
-        TabView {
-            HomeView()
-                .tabItem {
-                    Label("홈", systemImage: "house.fill")
-                }
+    @AppStorage("isLoggedIn") private var isLoggedIn = false
 
-            TravelView()
-                .tabItem {
-                    Label("여행", systemImage: "map.fill")
-                }
+    var body: some View {
+        Group {
+            if isLoggedIn {
+                mainTabView
+            } else {
+                LoginView()
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .didReceiveUnauthorized)) { _ in
+            isLoggedIn = false
+        }
+    }
+
+    private var mainTabView: some View {
+        TabView {
+            NavigationStack {
+                HomeView()
+            }
+            .tabItem {
+                Label("홈", systemImage: "house.fill")
+            }
+
+            NavigationStack {
+                TravelView()
+            }
+            .tabItem {
+                Label("여행", systemImage: "map.fill")
+            }
 
             NavigationStack {
                 ClosetView()

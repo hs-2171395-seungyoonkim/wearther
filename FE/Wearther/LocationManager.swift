@@ -16,6 +16,9 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     func request() {
+        #if targetEnvironment(simulator)
+        return
+        #else
         switch manager.authorizationStatus {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
@@ -24,13 +27,16 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         default:
             break
         }
+        #endif
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        #if !targetEnvironment(simulator)
         if manager.authorizationStatus == .authorizedWhenInUse ||
            manager.authorizationStatus == .authorizedAlways {
             manager.requestLocation()
         }
+        #endif
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -39,7 +45,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             self.latitude = location.coordinate.latitude
             self.longitude = location.coordinate.longitude
         }
-        geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, _ in
+        geocoder.reverseGeocodeLocation(location, preferredLocale: Locale(identifier: "ko_KR")) { [weak self] placemarks, _ in
             if let placemark = placemarks?.first {
                 let locality = placemark.locality ?? ""
                 let subLocality = placemark.subLocality ?? ""
