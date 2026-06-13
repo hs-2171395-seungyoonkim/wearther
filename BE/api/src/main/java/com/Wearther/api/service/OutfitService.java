@@ -57,6 +57,7 @@ public class OutfitService {
                 .temperatureMin(request.getTempMin())
                 .temperatureMax(request.getTempMax())
                 .items(items)
+                .saved(true)
                 .build();
 
         return OutfitResponse.from(outfitRepository.save(outfit));
