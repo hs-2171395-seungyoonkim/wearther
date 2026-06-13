@@ -48,7 +48,7 @@ public class UserService {
                 .stylePreference(user.getStylePreference())
                 .notificationTime(user.getNotificationTime())
                 .stats(UserProfileResponse.Stats.builder()
-                        .savedOutfits(outfitRepository.countByUserIdAndSaved(user.getId(), true))
+                        .savedOutfits(outfitRepository.countByUserId(user.getId()))
                         .tripCount(tripRepository.countByUserId(user.getId()))
                         .closetItemCount(closetItemRepository.countByUserId(user.getId()))
                         .build())
